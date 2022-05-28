@@ -1,0 +1,56 @@
+map_list:
+   - edge:
+        id: 0
+        type: left
+        connection_0: 
+        connection_1:
+        connection_2:
+        connection_3:
+        connection_4:
+        connection_5:
+        connection_6:
+        connection_7:
+   - edge:
+        id: 1
+        type: right
+        connection_0: 
+        connection_1:
+        connection_2:
+        connection_3:
+        connection_4:
+        connection_5:
+        connection_6:
+        connection_7:
+   - edge:
+        id: 2
+        type: right
+        connection_0: 
+        connection_1:
+        connection_2:
+        connection_3:
+        connection_4:
+        connection_5:
+        connection_6:
+        connection_7:
+    - edge:
+        id: 3
+        type: right
+        connection_0: 
+        connection_1:
+        connection_2:
+        connection_3:
+        connection_4:
+        connection_5:
+        connection_6:
+        connection_7:
+    - edge:
+        id: 4
+        type: right
+        connection_0: 
+        connection_1:
+        connection_2:
+        connection_3:
+        connection_4:
+        connection_5:
+        connection_6:
+        connection_7:

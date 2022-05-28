@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="file" default="$(find map_changer)/config/map_list.yaml"/>
+
+    <node pkg="topological_plan" type="topological_plan" name="topological_plan" output="screen">
+        <param name="filename" value="$(arg file)"/>
+    </node>
+    
+    <node pkg="topological_plan" type="movig_distance" name="moving_distance" output= "screen">
+    </node>
+
+    <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find waypoint_nav)/rviz/editor.rviz" /> -->
+</launch>
