@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="topological_plan" type="moving_distance.py" name="moving_distance" output= "screen">
+        <param name="distance_m" value="5.0" />
+    </node>
+</launch>

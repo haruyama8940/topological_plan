@@ -1,33 +1,41 @@
 #!/usr/bin/env python3 
+from operator import imod
 import rospy 
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float32
 from std_srvs.srv import SetBool,SetBoolRequest,SetBoolResponse
+from geometry_msgs.msg import Twist
 import numpy as np
 
 class distance_diff():
     def __init__(self):
         
-        self.odom_x, self.odom_y,self.distance_m = 0.0, 0.0, 0.0
+        self.odom_x, self.odom_y = 0.0, 0.0
+        # self.distance_m = 5.0
+        d_m = rospy.search_param("distance_m")
+        self.distance_m = rospy.get_param(d_m)
         self.flag =0
         self.branch_flag = False
         self.odom_x_list = np.array([],dtype=float)
         self.odom_y_list = np.array([],dtype=float)
         self.odom_subscriber = rospy.Subscriber('/camera/odom/sample', Odometry, self.callback_odom)
-        self.distance_pub = rospy.Publisher('moving_distance',Float32,queue_size=1)
-        # self.distance_set = rospy.Service('distance_m',SetBool,callback_branch)
+        self.distance_pub = rospy.Publisher('/moving_distance',Float32,queue_size=1)
+        self.cmd_vel_pub = rospy.Publisher('/start_vel',Twist,queue_size=1)
+        self.vel = Twist()
+        # self.distance_set = rospy.Service('distance_m',SetBool,self.callback_branch)
+        
         #self.resp,self.req
 
     def callback_odom(self,msg):
         odom_x = msg.pose.pose.position.x  
         odom_y = msg.pose.pose.position.y
-        self.flag +=1
-        if self.flag == 50:
-            self.odom_x_list =np.append(self.odom_x_list,odom_x )
-            self.odom_y_list =np.append(self.odom_y_list,odom_y)
-            self.pub_long =self.distance(self.odom_x_list,self.odom_y_list)
-            self.distance_pub.publish(self.pub_long)
-            self.flag=0
+        self.odom_x_list =np.append(self.odom_x_list,odom_x )
+        self.odom_y_list =np.append(self.odom_y_list,odom_y)
+        self.pub_long =self.distance(self.odom_x_list,self.odom_y_list)
+        self.distance_pub.publish(self.pub_long)
+        if self.pub_long <= self.distance_m:
+            self.vel.linear.x = 0.2
+            self.cmd_vel_pub.publish(self.vel)
 
     def distance(self,x_list, y_list):
         A = np.vstack([x_list, np.ones(len(x_list))]).T
