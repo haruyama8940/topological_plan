@@ -9,21 +9,22 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Int8.h>
 #include <yaml-cpp/yaml.h>
+#include <sensor_msgs/NavSatFix.h>
 
 class topological_plan
 {
 
 public:
-    topological_plan(/* args */);
+    topological_plan();
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
-    bool read_yaml();
+    bool read_gnss_yaml();
     void moving_distance();
     void distanceCallback(std_msgs::Float32 &msg);
 private:
     std::string filename_, pass;
     ros::Publisher map_pub;
-    ros::Subscriber odom_sub;
+    ros::Subscriber odom_sub,gnss_sub;
 };
 
 topological_plan::topological_plan() :
@@ -31,7 +32,8 @@ nh_(),
 pnh_("~")
 {
     pnh_.param("filename", filename_, filename_);
-    // odom_sub = nh_.subscribe("odom",&topological_plan::odomCallback,1);
+
+    gnss_sub = nh_.subscribe("/ublox/fix",&topological_plan::gnssCallback,1);
 
 }
 
@@ -47,11 +49,20 @@ bool topological_plan::read_yaml()
     
     return true;
 }
+void topological_plan::gnssCallback(sensor_msgs::NavSatFix &gnss_data)
+{
+    current_gnss_latitude = gnss_data.latitube;
+    current_gnss_longitube = gnss_data.longitube;
+}
 
 void topological_plan::distanceCallback(std_msgs::Float32 &msg)
 {
     float distance;
     distance = msg.data
+}
+void topological_plan::on_waypoint()
+{
+    
 }
 
 int main(int argc, char** argv){
